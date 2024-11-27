@@ -617,7 +617,8 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
+        jedi_language_server = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -979,6 +980,7 @@ require('lazy').setup({
         'vim',
         'vimdoc',
         'typescript',
+        'python',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -1029,44 +1031,79 @@ require('lazy').setup({
   --
   --
   --  M O R E   P L U G I N S
+  --
+  {
+    'elihunter173/dirbuf.nvim',
+    opts = {},
+  },
 
   {
-    'folke/trouble.nvim',
-    opts = {},
-    cmd = 'Trouble',
-    keys = {
-      {
-        '<leader>xx',
-        '<cmd>Trouble diagnostics toggle<cr>',
-        desc = 'Diagnostics (Trouble)',
+    'gbprod/substitute.nvim',
+    opts = {
+      on_substitute = nil,
+      yank_substituted_text = false,
+      preserve_cursor_position = false,
+      modifiers = nil,
+      highlight_substituted_text = {
+        enabled = true,
+        timer = 500,
       },
-      {
-        '<leader>xX',
-        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
-        desc = 'Buffer Diagnostics (Trouble)',
+      range = {
+        prefix = 's',
+        prompt_current_text = false,
+        confirm = false,
+        complete_word = false,
+        subject = nil,
+        range = nil,
+        suffix = '',
+        auto_apply = false,
+        cursor_position = 'end',
       },
-      {
-        '<leader>cs',
-        '<cmd>Trouble symbols toggle focus=false<cr>',
-        desc = 'Symbols (Trouble)',
-      },
-      {
-        '<leader>cl',
-        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
-        desc = 'LSP Definitions / references / ... (Trouble)',
-      },
-      {
-        '<leader>xL',
-        '<cmd>Trouble loclist toggle<cr>',
-        desc = 'Location List (Trouble)',
-      },
-      {
-        '<leader>xQ',
-        '<cmd>Trouble qflist toggle<cr>',
-        desc = 'Quickfix List (Trouble)',
+      exchange = {
+        motion = false,
+        use_esc_to_cancel = true,
+        preserve_cursor_position = false,
       },
     },
   },
+
+  -- {
+  --   'folke/trouble.nvim',
+  --   opts = {},
+  --   cmd = 'Trouble',
+  --   keys = {
+  --     {
+  --       '<leader>xx',
+  --       '<cmd>Trouble diagnostics toggle<cr>',
+  --       desc = 'Diagnostics (Trouble)',
+  --     },
+  --     {
+  --       '<leader>xX',
+  --       '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+  --       desc = 'Buffer Diagnostics (Trouble)',
+  --     },
+  --     {
+  --       '<leader>cs',
+  --       '<cmd>Trouble symbols toggle focus=false<cr>',
+  --       desc = 'Symbols (Trouble)',
+  --     },
+  --     {
+  --       '<leader>cl',
+  --       '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+  --       desc = 'LSP Definitions / references / ... (Trouble)',
+  --     },
+  --     {
+  --       '<leader>xL',
+  --       '<cmd>Trouble loclist toggle<cr>',
+  --       desc = 'Location List (Trouble)',
+  --     },
+  --     {
+  --       '<leader>xQ',
+  --       '<cmd>Trouble qflist toggle<cr>',
+  --       desc = 'Quickfix List (Trouble)',
+  --     },
+  --   },
+  -- },
 
   {
     'nvim-lualine/lualine.nvim',
@@ -1110,6 +1147,65 @@ require('lazy').setup({
       }
     end,
   },
+
+  {
+    url = os.getenv 'USER' .. '@git.amazon.com:pkg/AmazonQNVim',
+    ft = {
+      'amazonq',
+      'java',
+      'python',
+      'typescript',
+      'javascript',
+      'csharp',
+      'ruby',
+      'kotlin',
+      'shell',
+      'sql',
+      'c',
+      'cpp',
+      'go',
+      'rust',
+      'lua',
+    },
+    branch = 'mainline',
+    opts = {
+      ssoStartUrl = 'https://amzn.awsapps.com/start',
+      lsp_server_cmd = {
+        'node',
+        os.getenv 'HOME' .. '/.local/share/nvim/lazy/AmazonQNVim/language-server/build/aws-lsp-codewhisperer-token-binary.js',
+        '--stdio',
+      },
+    },
+    keys = {
+      {
+        '<leader>aq',
+        '<CMD>AmazonQChat<CR>',
+        desc = 'Toggle AmazonQ Chat',
+        silent = true,
+      },
+    },
+  },
+
+  -- -- Reference https://docs.gitlab.com/ee/editor_extensions/neovim/index.html?tab=lazy.nvim
+  -- {
+  --   'git@gitlab.com:gitlab-org/editor-extensions/gitlab.vim.git',
+  --   -- Activate when a file is created/opened
+  --   event = { 'BufReadPre', 'BufNewFile' },
+  --   -- Activate when a supported filetype is open
+  --   ft = { 'go', 'javascript', 'python', 'ruby' },
+  --   cond = function()
+  --     -- Only activate if token is present in environment variable.
+  --     -- Remove this line to use the interactive workflow.
+  --     return vim.env.GITLAB_TOKEN ~= nil and vim.env.GITLAB_TOKEN ~= ''
+  --   end,
+  --   opts = {
+  --     statusline = {
+  --       -- Hook into the built-in statusline to indicate the status
+  --       -- of the GitLab Duo Code Suggestions integration
+  --       enabled = false,
+  --     },
+  --   },
+  -- },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
